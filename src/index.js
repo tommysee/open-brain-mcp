@@ -237,12 +237,42 @@ async function handleMcp(request, env) {
   }
 }
 
+async function handleSave(request, env) {
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders() });
+  }
+
+  if (request.method !== "POST") {
+    return Response.json({ error: "Method not allowed" }, { status: 405, headers: corsHeaders() });
+  }
+
+  const apiKey = request.headers.get("X-API-Key");
+  if (!apiKey || apiKey !== env.SAVE_API_KEY) {
+    return Response.json({ error: "Unauthorized" }, { status: 401, headers: corsHeaders() });
+  }
+
+  try {
+    const { content, type, tags } = await request.json();
+    if (!content) {
+      return Response.json({ error: "content is required" }, { status: 400, headers: corsHeaders() });
+    }
+    const result = await handleToolCall("save_memory", { content, type, tags }, env);
+    return Response.json(result, { headers: corsHeaders() });
+  } catch (err) {
+    return Response.json({ error: err.message }, { status: 500, headers: corsHeaders() });
+  }
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
     if (url.pathname === "/mcp") {
       return handleMcp(request, env);
+    }
+
+    if (url.pathname === "/save") {
+      return handleSave(request, env);
     }
 
     if (url.pathname === "/") {
