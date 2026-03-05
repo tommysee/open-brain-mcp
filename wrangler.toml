@@ -1,0 +1,12 @@
+name = "open-brain-mcp"
+main = "src/index.js"
+compatibility_date = "2025-03-10"
+compatibility_flags = ["nodejs_compat"]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["OpenBrainMCP"]
+
+[[migrations]]
+tag = "v2"
+deleted_classes = ["OpenBrainMCP"]
