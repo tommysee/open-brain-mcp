@@ -1,0 +1,7 @@
+name = "open-brain-telegram"
+main = "src/index.js"
+compatibility_date = "2025-03-10"
+
+[[services]]
+binding = "MCP_SERVICE"
+service = "open-brain-mcp"
